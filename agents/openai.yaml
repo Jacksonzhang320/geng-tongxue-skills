@@ -1,0 +1,6 @@
+interface:
+  display_name: "Paper Data Forensics"
+  short_description: "Rank statistical anomaly leads in paper data."
+  default_prompt: "Use $paper-data-forensics to audit this paper's raw data and supplementary files for ranked statistical anomaly leads."
+policy:
+  allow_implicit_invocation: true
