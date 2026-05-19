@@ -46,6 +46,15 @@ $SKILL_DIR = "<path-to-this-skill>"
    python "$SKILL_DIR/scripts/render_report.py" --ranked <out_dir>/findings_normalized.json --out-dir <out_dir>/report
    ```
 
+Optional image-chain audit, run after `inventory_inputs.py` when PDF pages, figure images, or supplementary images should be screened for visual reuse leads:
+```powershell
+python "$SKILL_DIR/scripts/extract_figure_images.py" --inventory <out_dir>/inventory.json --out <out_dir>/image_chain/image_inventory.jsonl --work-dir <out_dir>/image_chain
+python "$SKILL_DIR/scripts/segment_panels.py" --image-inventory <out_dir>/image_chain/image_inventory.jsonl --out <out_dir>/image_chain/panel_manifest.jsonl --work-dir <out_dir>/image_chain --split-pages
+python "$SKILL_DIR/scripts/audit_image_reuse.py" --panels <out_dir>/image_chain/panel_manifest.jsonl --out <out_dir>/image_chain/image_findings_raw.json --candidates-out <out_dir>/image_chain/image_candidates.jsonl --local-clone
+python "$SKILL_DIR/scripts/normalize_image_findings.py" --findings <out_dir>/image_chain/image_findings_raw.json --out <out_dir>/image_chain/image_findings_normalized.json
+python "$SKILL_DIR/scripts/render_image_report.py" --findings <out_dir>/image_chain/image_findings_normalized.json --out-dir <out_dir>/image_chain/report
+```
+
 ## Source Priority
 
 Prefer sources in this order: raw tables, supplementary tables, PDF-extracted tables, then image/chart-derived estimates. For images, place manually digitized or external-tool point values beside the image as `<image_stem>.points.csv` or `<image_stem>.points.tsv`; these records are labeled `estimated`. Image or chart-derived values must be treated only as leads.
@@ -59,6 +68,7 @@ Prefer sources in this order: raw tables, supplementary tables, PDF-extracted ta
 - Group-level inconsistencies: suspiciously tidy mean/SD/SEM/n relations when columns are identifiable.
 - Benford/first-digit checks only when values span enough orders of magnitude and are not constrained by design.
 - Article/source-data mismatches: figure captions, panel labels, group names, time points, sample counts, and source-data workbooks disagree.
+- Image-chain leads: whole-panel reuse, cropped/rescaled reuse, rotated/flipped reuse, within-panel local clone patches, and blot/gel lane similarity. Treat visual hits as review leads, not proof.
 - Benchmark recovery: public corrections or editor notes may be used after blind analysis to score whether the workflow recovered known issue families.
 - Fabrication-compatible disposition: every raw hit must be normalized to `not_applicable`, `weak_anomaly`, or `high_confidence_fabrication_compatible_anomaly` before it appears in a report.
 
@@ -78,6 +88,7 @@ When using a known problematic paper as a benchmark, keep the oracle separate fr
 - Start with a Chinese assessment-summary section that directly states whether high-confidence fabrication-compatible anomalies were found.
 - If no auditable raw/source-data numeric table is available, the summary must say this directly and ask for the user's next-step decision before any image/chart-derived analysis.
 - Always include limitations: statistical anomalies are not proof of misconduct; rounding and small samples can create false positives; source records and experimental context are required.
+- Image-chain reports must include visual evidence images for retained findings and must state that repeated texture, layout templates, compression, low resolution, public controls, and figure-export workflows can create false positives.
 - For plots, export both `.png` and `.svg` with the same stem. Do not export PDF by default.
 
 ## Long Runs
