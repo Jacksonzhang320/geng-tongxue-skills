@@ -1,8 +1,8 @@
-# Paper Data Forensics
+# geng-tongxue-skills
 
-Codex skill for screening paper-associated numeric data for statistical anomaly leads.
+Codex skill collection for screening paper-associated numeric data and source-data workbooks for statistical anomaly leads.
 
-It audits source-data workbooks, supplementary tables, PDF-extracted tables, and manually digitized chart values for patterns such as terminal-digit concentration, repeated rows or values, overly regular decimals, arithmetic smoothness, Benford mismatches where applicable, and figure/source-data context mismatches.
+This repository currently contains one skill: `paper-data-forensics`. It audits supplementary tables, source-data Excel files, PDF-extracted tables, and manually digitized chart values for patterns such as terminal-digit concentration, repeated rows or values, overly regular decimals, arithmetic smoothness, Benford mismatches where applicable, and figure/source-data context mismatches.
 
 The output is a ranked lead list for human review. Findings are not proof of misconduct; they identify anomalies that need source records, experimental context, and author-side explanations.
 
